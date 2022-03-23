@@ -1,6 +1,6 @@
 {
   "name": "oliver-core",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Oliver Core",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
