@@ -28,9 +28,12 @@
   "keywords": [],
   "author": "devs-house",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "ramda": "^0.28.0"
+  },
   "devDependencies": {
     "@types/jest": "^27.4.1",
+    "@types/ramda": "^0.28.1",
     "jest": "^27.5.1",
     "prettier": "^2.6.0",
     "ts-jest": "^27.1.3",
