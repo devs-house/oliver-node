@@ -5,17 +5,17 @@ Have you ever wished that a unicorn was saying hello world to you ?
 ## Install
 
 ```
-npm install oliver-node
+npm install oliver-core
 
-yarn add oliver-node
+yarn add oliver-core
 ```
 
 ## Example
 
 ```ts
-import { Unicorn } from "oliver-node";
+import { Unicorn } from "oliver-core";
 // OR in nodeJS ( commonJS module )
-const { Unicorn } = require("oliver-node");
+const { Unicorn } = require("oliver-core");
 
 const myUnicorn = new Unicorn();
 
