@@ -1,15 +1,25 @@
 {
-  "name": "oliver-node",
-  "version": "1.0.0",
-  "description": "Oliver client",
+  "name": "oliver-core",
+  "version": "1.0.4",
+  "description": "Oliver Core",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
-    "prepare": "npm run build"
+    "test": "jest --config jestconfig.json",
+    "build": "rm -rf dist && tsc",
+    "format": "prettier --write \"src/**/*.(ts|js|tsx|jsx)\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags",
+    "bump-patch": "npm version patch",
+    "bump-minor": "npm version minor",
+    "bump-major": "npm version major"
   },
   "repository": {
     "type": "git",
@@ -17,5 +27,18 @@
   },
   "keywords": [],
   "author": "devs-house",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "ramda": "^0.28.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "@types/ramda": "^0.28.1",
+    "jest": "^27.5.1",
+    "prettier": "^2.6.0",
+    "ts-jest": "^27.1.3",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.6.2"
+  }
 }

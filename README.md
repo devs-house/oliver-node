@@ -1,25 +1,26 @@
-# Unicorn Says Hello World
+# Oliver Core
 
-Have you ever wished that a unicorn was saying hello world to you ?
+Oliver client for NodeJs application integration.
 
-## Install
+### Install
 
 ```
-npm install oliver-node
-
-yarn add oliver-node
+npm install oliver-core
+// or
+yarn add oliver-core
 ```
 
-## Example
+### Initialization
+
+Create an account from Oliver Platform. ([development](https://development.olvr.app), [staging](https://staging.olvr.app), [production](https://olvr.app))
 
 ```ts
-import { Unicorn } from "oliver-node";
-// OR in nodeJS ( commonJS module )
-const { Unicorn } = require("oliver-node");
+import { OliverClient } from 'oliver-core';
 
-const myUnicorn = new Unicorn();
-
-console.log(myUnicorn.sayHelloTo("jason"));
+// Choose environment 'development' | 'staging' | 'production'
+// Retrieve your user keys from platform account settings.
+const oliver = new OliverClient('development', {
+  apiKey: '<key>',
+  apiSecret: '<secret>',
+});
 ```
-
-Enjoy !
