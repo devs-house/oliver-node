@@ -2,7 +2,7 @@
 
 Oliver client for NodeJs application integration.
 
-#### Install
+### Install
 
 ```
 npm install oliver-core
@@ -10,7 +10,7 @@ npm install oliver-core
 yarn add oliver-core
 ```
 
-#### Initialization
+### Initialization
 
 Create an account from Oliver Platform. ([development](development.olvr.app), [staging](staging.olvr.app), [production](olvr.app))
 
