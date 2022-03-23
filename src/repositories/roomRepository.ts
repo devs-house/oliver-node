@@ -31,7 +31,10 @@ type RoomKeyResponse = Result<{
 }>;
 
 export const roomRepository = (apiClient: ApiClient) => ({
-  fetchRoom: async (roomId: string, accessCode?: string): Promise<RoomResponse> => {
+  fetchRoom: async (
+    roomId: string,
+    accessCode?: string,
+  ): Promise<RoomResponse> => {
     const response = await apiClient.request({
       request: {
         method: 'GET',
@@ -171,7 +174,10 @@ export const roomRepository = (apiClient: ApiClient) => ({
     }
   },
 
-  refreshRoomKeys: async (apiKey: string, roomId: string): Promise<RoomKeyResponse> => {
+  refreshRoomKeys: async (
+    apiKey: string,
+    roomId: string,
+  ): Promise<RoomKeyResponse> => {
     const response = await apiClient.request({
       request: {
         method: 'POST',

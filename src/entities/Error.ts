@@ -13,7 +13,10 @@ enum ErrorType {
 }
 
 export const OLError = {
-  someThingWentWrong: (completion?: (success: boolean) => void, actionTitle?: string): OLErrorProtocol => ({
+  someThingWentWrong: (
+    completion?: (success: boolean) => void,
+    actionTitle?: string,
+  ): OLErrorProtocol => ({
     name: 'Something went wrong',
     title: 'Oopps!',
     message: 'Something went wrong',
@@ -39,7 +42,10 @@ export const OLError = {
     completion: completion ?? ((_) => {}),
     actionTitle: actionTitle,
   }),
-  accessDenied: (completion?: (success: boolean) => void, actionTitle?: string): OLErrorProtocol => ({
+  accessDenied: (
+    completion?: (success: boolean) => void,
+    actionTitle?: string,
+  ): OLErrorProtocol => ({
     name: 'Access Denied',
     title: 'Access Denied',
     message: 'Your authorization expired, please try again',

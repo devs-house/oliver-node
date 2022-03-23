@@ -21,7 +21,7 @@ const production: Config = {
 };
 
 export const config: Record<Environment, Config> = {
-  development: development,
-  staging: staging,
-  production: production,
+  development,
+  staging,
+  production,
 };

@@ -64,7 +64,7 @@ export const apiClient = (
     const req = target.request;
     const url = baseUrl + req.endPoint;
 
-    let headers: Record<string, string> = customHeaders;
+    const headers: Record<string, string> = customHeaders;
     headers['content-type'] = 'application/json';
     if (accessToken) {
       headers['Authorization'] = `Bearer ${accessToken}`;
@@ -144,7 +144,7 @@ export const apiClient = (
     } else if (!isSuccess && error && error.type === ErrorType.hard) {
       return failure(OLError.apiDisplayable(error));
     } else if (!isSuccess && error && error.type === ErrorType.soft) {
-      let updatedData = data ?? {};
+      const updatedData = data ?? {};
       updatedData['error'] = error;
       updatedData['ret_code'] = response.retCode;
       return success(updatedData);

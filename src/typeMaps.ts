@@ -1,5 +1,14 @@
 import { prop, propOr } from 'ramda';
-import { Room, RoomConfiguration, RoomKey, RoomLink, RoomLocation, RoomMainMedia, User, UserSettings } from './types';
+import {
+  Room,
+  RoomConfiguration,
+  RoomKey,
+  RoomLink,
+  RoomLocation,
+  RoomMainMedia,
+  User,
+  UserSettings,
+} from './types';
 
 // MARK: - User
 
@@ -53,7 +62,9 @@ export const parseRoom = (json: Room): Room => ({
   is_active: propOr(false, 'is_active', json),
 });
 
-export const parseRoomConfiguration = (json: RoomConfiguration): RoomConfiguration => ({
+export const parseRoomConfiguration = (
+  json: RoomConfiguration,
+): RoomConfiguration => ({
   chat: {
     general: propOr(false, 'general', json?.chat),
     channels: propOr(false, 'channels', json?.chat),
