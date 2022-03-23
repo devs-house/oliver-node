@@ -10,7 +10,7 @@ type UserResponse = Result<{
 }>;
 
 export const userRepository = (apiClient: ApiClient) => ({
-  getUser: async (email: string): Promise<UserResponse> => {
+  fetchUserByEmail: async (email: string): Promise<UserResponse> => {
     const response = await apiClient.request({
       request: {
         method: 'GET',
@@ -31,7 +31,7 @@ export const userRepository = (apiClient: ApiClient) => ({
     }
   },
 
-  fetchUser: async (userId: string): Promise<UserResponse> => {
+  fetchUserById: async (userId: string): Promise<UserResponse> => {
     const response = await apiClient.request({
       request: {
         method: 'GET',
