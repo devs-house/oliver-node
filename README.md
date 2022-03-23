@@ -12,7 +12,7 @@ yarn add oliver-core
 
 ### Initialization
 
-Create an account from Oliver Platform. ([development](development.olvr.app), [staging](staging.olvr.app), [production](olvr.app))
+Create an account from Oliver Platform. ([development](https://development.olvr.app), [staging](https://staging.olvr.app), [production](https://olvr.app))
 
 ```ts
 import { OliverClient } from 'oliver-core';
