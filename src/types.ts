@@ -109,3 +109,28 @@ export type RoomKey = {
   api_secret: string;
   room_id: string | null;
 };
+
+export enum AccessLevel {
+  admin = 0,
+  moderator = 1,
+}
+
+export type Invitation = {
+  id: string;
+  email: string;
+  notes: string;
+  first_name: string;
+  last_name: string;
+  room_id: string;
+  status: 'accepted' | 'pending';
+  notify_on_accept: boolean;
+  notify_on_accept_email: string;
+  invitation_type: 'subscriber' | 'collaborator';
+  invited_user_id: string;
+  invited_at: number;
+  collaborator_access_level: AccessLevel | null;
+  invited_by_id: string;
+  created_at: number;
+  updated_at: number;
+  is_active: boolean;
+};

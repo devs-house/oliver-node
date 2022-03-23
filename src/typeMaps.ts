@@ -1,5 +1,6 @@
 import { prop, propOr } from 'ramda';
 import {
+  Invitation,
   Room,
   RoomConfiguration,
   RoomKey,
@@ -117,4 +118,24 @@ export const parseRoomKey = (json: RoomKey): RoomKey => ({
   api_key: prop('api_key', json),
   api_secret: prop('api_secret', json),
   room_id: propOr(null, 'room_id', json),
+});
+
+export const parseInvitation = (json: Invitation): Invitation => ({
+  id: prop('id', json),
+  email: prop('email', json),
+  notes: prop('notes', json),
+  invited_at: prop('invited_at', json),
+  invited_by_id: prop('invited_by_id', json),
+  created_at: prop('created_at', json),
+  updated_at: prop('updated_at', json),
+  is_active: prop('is_active', json),
+  first_name: prop('first_name', json),
+  last_name: prop('last_name', json),
+  room_id: prop('room_id', json),
+  status: prop('status', json),
+  invited_user_id: prop('invited_user_id', json),
+  collaborator_access_level: propOr(null, 'collaborator_access_level', json),
+  invitation_type: prop('invitation_type', json),
+  notify_on_accept: prop('notify_on_accept', json),
+  notify_on_accept_email: prop('notify_on_accept_email', json),
 });
