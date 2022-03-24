@@ -1,12 +1,14 @@
 import { prop } from 'ramda';
 import { ApiClient } from '../apiClient';
 import { Result, success } from '../entities/Result';
+import { roomKeyHeader } from '../roomKeyHeader';
 import { parseInvitation } from '../typeMaps';
-import { AccessLevel, Invitation } from '../types';
+import { AccessLevel, Invitation, InvitationType, KeyPair } from '../types';
 
-export type InvitationType = 'admin' | 'moderator' | 'member';
-
-export const invitationRepository = (apiClient: ApiClient) => ({
+export const invitationRepository = (
+  apiClient: ApiClient,
+  roomKey?: KeyPair,
+) => ({
   createInvitation: async (
     type: InvitationType,
     email: string,
@@ -21,20 +23,23 @@ export const invitationRepository = (apiClient: ApiClient) => ({
       member: null,
     };
 
-    const response = await apiClient.request({
-      request: {
-        method: 'POST',
-        endPoint: '/invitation',
-        parameters: {
-          email: email,
-          first_name: firstName,
-          last_name: lastName,
-          notes: notes,
-          room_id: roomId,
-          collaborator_access_level: levels[type],
+    const response = await apiClient.request(
+      {
+        request: {
+          method: 'POST',
+          endPoint: '/invitation',
+          parameters: {
+            email: email,
+            first_name: firstName,
+            last_name: lastName,
+            notes: notes,
+            room_id: roomId,
+            collaborator_access_level: levels[type],
+          },
         },
       },
-    });
+      roomKeyHeader(roomKey),
+    );
 
     switch (response.type) {
       case 'success':
@@ -53,18 +58,21 @@ export const invitationRepository = (apiClient: ApiClient) => ({
     lastName: string,
     notes: string,
   ): Promise<Result<Invitation>> => {
-    const response = await apiClient.request({
-      request: {
-        method: 'PUT',
-        endPoint: '/invitation',
-        parameters: {
-          invitation_id: invitationId,
-          first_name: firstName,
-          last_name: lastName,
-          notes: notes,
+    const response = await apiClient.request(
+      {
+        request: {
+          method: 'PUT',
+          endPoint: '/invitation',
+          parameters: {
+            invitation_id: invitationId,
+            first_name: firstName,
+            last_name: lastName,
+            notes: notes,
+          },
         },
       },
-    });
+      roomKeyHeader(roomKey),
+    );
 
     switch (response.type) {
       case 'success':
@@ -80,15 +88,18 @@ export const invitationRepository = (apiClient: ApiClient) => ({
   deleteInvitation: async (
     invitationId: string,
   ): Promise<Result<Invitation>> => {
-    const response = await apiClient.request({
-      request: {
-        method: 'DELETE',
-        endPoint: '/invitation',
-        parameters: {
-          invitation_id: invitationId,
+    const response = await apiClient.request(
+      {
+        request: {
+          method: 'DELETE',
+          endPoint: '/invitation',
+          parameters: {
+            invitation_id: invitationId,
+          },
         },
       },
-    });
+      roomKeyHeader(roomKey),
+    );
 
     switch (response.type) {
       case 'success':

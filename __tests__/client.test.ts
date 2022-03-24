@@ -1,8 +1,7 @@
-import { KeyPair, OliverClient } from '../src/client';
+import { OliverClient } from '../src/client';
 import * as apiClient from '../src/apiClient';
 import { Environment } from '../src/config';
-
-jest.spyOn(apiClient, 'apiClient').mockReturnValue({ request: jest.fn() });
+import { KeyPair } from '../src/types';
 
 describe('client', () => {
   it('init should create development client', () => {
@@ -16,7 +15,7 @@ describe('client', () => {
     // Then
     expect(oliver.config.environment).toEqual(env);
     expect(oliver.config.apiUrl).toEqual('https://development.olvr.app/api');
-    expect(oliver.userKeys).toEqual(keys);
+    expect(oliver.userKey).toEqual(keys);
   });
 
   it('init should create staging client', () => {
@@ -30,7 +29,7 @@ describe('client', () => {
     // Then
     expect(oliver.config.environment).toEqual(env);
     expect(oliver.config.apiUrl).toEqual('https://staging.olvr.app/api');
-    expect(oliver.userKeys).toEqual(keys);
+    expect(oliver.userKey).toEqual(keys);
   });
 
   it('init should create production client', () => {
@@ -44,33 +43,6 @@ describe('client', () => {
     // Then
     expect(oliver.config.environment).toEqual(env);
     expect(oliver.config.apiUrl).toEqual('https://olvr.app/api');
-    expect(oliver.userKeys).toEqual(keys);
-  });
-
-  it('user should call apiClient', () => {
-    // Given
-    const env: Environment = 'production';
-    const keys: KeyPair = { apiKey: 'key', apiSecret: 'secret' };
-    const oliver = new OliverClient(env, keys);
-
-    // When
-    oliver.user();
-
-    // Then
-    expect(apiClient.apiClient).toBeCalled();
-  });
-
-  it('room should call apiClient with roomKeys', () => {
-    // Given
-    const env: Environment = 'production';
-    const keys: KeyPair = { apiKey: 'key', apiSecret: 'secret' };
-    const roomKeys: KeyPair = { apiKey: 'roomKey', apiSecret: 'roomSecret' };
-    const oliver = new OliverClient(env, keys);
-
-    // When
-    oliver.room(roomKeys);
-
-    // Then
-    expect(apiClient.apiClient).toBeCalled();
+    expect(oliver.userKey).toEqual(keys);
   });
 });

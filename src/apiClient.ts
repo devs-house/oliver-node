@@ -2,6 +2,7 @@ import { prop } from 'ramda';
 import { log } from './logger';
 import { OLError } from './entities/Error';
 import { failure, Result, success } from './entities/Result';
+import { KeyPair } from './types';
 
 export type ApiTarget = {
   request: ApiRequest;
@@ -40,35 +41,33 @@ export enum ErrorType {
   hard = 1,
 }
 
-export type ApiClient = {
-  request: (target: ApiTarget) => Promise<Result<Record<string, any>>>;
-};
+export class ApiClient {
+  // MARK: - Properties
 
-export const apiClient = (
-  baseUrl: string,
-  customHeaders: Record<string, string>,
-  accessToken: string,
-  tokenUpdateHandler: (target: ApiTarget) => Promise<string>,
-  invalidAuthenticationHandler: (target: ApiTarget) => Promise<void>,
-): ApiClient => {
-  const request = async (target: ApiTarget) => {
-    return sendRequest(target, target.retryCount ?? 2);
-  };
+  readonly baseUrl: string;
+  readonly userKey: KeyPair;
 
-  const sendRequest = async (
+  // MARK: - Life Cycle
+
+  constructor(baseUrl: string, userKey: KeyPair) {
+    this.baseUrl = baseUrl;
+    this.userKey = userKey;
+  }
+
+  // MARK: - Request
+
+  public request = async (
     target: ApiTarget,
-    retryCount: number,
+    headers: Record<string, string> = {},
   ): Promise<Result<Record<string, any>>> => {
-    logRequest(target);
+    this.logRequest(this.baseUrl, target);
 
     const req = target.request;
-    const url = baseUrl + req.endPoint;
+    const url = this.baseUrl + req.endPoint;
 
-    const headers: Record<string, string> = customHeaders;
     headers['content-type'] = 'application/json';
-    if (accessToken) {
-      headers['Authorization'] = `Bearer ${accessToken}`;
-    }
+    headers['api-key'] = this.userKey.apiKey;
+    headers['api-secret'] = this.userKey.apiSecret;
 
     const queryMethods = ['GET', 'DELETE'];
     const encoding =
@@ -90,25 +89,17 @@ export const apiClient = (
 
       const statusCode = result.status;
 
-      if (statusCode === 403) {
-        if (retryCount < 1) {
-          invalidAuthenticationHandler(target);
-          throw Error('Access Denied');
-        } else {
-          await tokenUpdateHandler(target);
-          return await sendRequest(target, retryCount - 1);
-        }
-      }
-
       const data = await result.json();
-      logResponse(target, data, { statusCode });
-      return parse(data);
+      this.logResponse(this.baseUrl, target, data, { statusCode });
+      return this.parse(data);
     } catch (error) {
       return failure(OLError.someThingWentWrong());
     }
   };
 
-  const logRequest = (target: ApiTarget) => {
+  // MARK: - Helpers
+
+  private logRequest = (baseUrl: string, target: ApiTarget) => {
     log('Api Request', [
       `URL: ${baseUrl + target.request.endPoint}`,
       `Method: ${target.request.method}`,
@@ -117,7 +108,8 @@ export const apiClient = (
     ]);
   };
 
-  const logResponse = (
+  private logResponse = (
+    baseUrl: string,
     target: ApiTarget,
     data?: Record<string, any>,
     response?: { statusCode: number },
@@ -132,7 +124,7 @@ export const apiClient = (
     ]);
   };
 
-  const parse = (response?: ApiResponse): Result<Record<string, any>> => {
+  private parse = (response?: ApiResponse): Result<Record<string, any>> => {
     if (!response) throw Error('data is empty');
 
     const data = prop('data', response);
@@ -152,6 +144,4 @@ export const apiClient = (
       return failure(OLError.someThingWentWrong());
     }
   };
-
-  return { request };
-};
+}
