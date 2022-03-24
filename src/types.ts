@@ -84,11 +84,22 @@ export type RoomBanner = {
   image_url: string;
 };
 
+export enum RoomLinkType {
+  facebook = 0,
+  twitter,
+  instagram,
+  email,
+  linkedIn,
+  website,
+  youtube,
+  zoom,
+}
+
 export type RoomLink = {
   id: string;
   name: string;
   url: string;
-  type: number;
+  type: RoomLinkType;
   owner_id: string;
   is_active: boolean;
   created_at: number;

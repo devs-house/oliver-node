@@ -219,8 +219,6 @@ export type CreateRoomRequest = {
   access_codes: string[];
   tags: string[];
   link_ids: string[];
-  api_key: string | null;
-  api_secret: string | null;
   media: Partial<RoomMainMedia>;
   config: Partial<RoomConfiguration>;
   location: Partial<RoomLocation> | null;

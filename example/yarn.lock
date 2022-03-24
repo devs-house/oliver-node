@@ -64,10 +64,10 @@ make-error@^1.1.1:
   resolved "https://registry.yarnpkg.com/make-error/-/make-error-1.3.6.tgz#2eb2e37ea9b67c4891f684a1394799af484cf7a2"
   integrity sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==
 
-oliver-core@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/oliver-core/-/oliver-core-1.0.5.tgz#0384c29378f10fd95480e0824e8f814f02956231"
-  integrity sha512-oJLkAPy1Bu9XO5P+obECvFTgbTH2QwjcE+879e4uafIXdQdphB0o5XkR0jW85E8cc9tJf+5sm+Wy1s7zR4MTVw==
+oliver-core@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/oliver-core/-/oliver-core-1.0.6.tgz#ae3d91316ceb189415705a4cc4020e3bf947204a"
+  integrity sha512-jCAx1Mu7KJuQY6BNUODVTBvoeqPj+3I1n4Ub243okpaTgWIXnfdJBUf8G4jVVYDtrsMr1+FCqo4n4oj7p3pdLw==
   dependencies:
     ramda "^0.28.0"
 
