@@ -6,15 +6,27 @@ const client = new OliverClient('development', {
 });
 
 const manageRoom = async () => {
-  // tslint:disable-next-line: no-console
-  // await client.room().createRoom({
-  //   title: 'Hello world',
-  //   overview: 'Hello world overview',
-  //   start_date: 1648210042,
-  //   end_date: 0,
-  //   access_codes: [],
-  //   privacy_type: 'managed',
-  // });
+  const room = await client.createRoom(
+    'Initial room',
+    'Initial room description',
+    {
+      square: '',
+      horizontal: '',
+    },
+    { start: 0, end: 0 },
+    [],
+    'managed',
+    {
+      chat_enabled: true,
+      share_enabled: true,
+      see_more_enabled: true,
+      banners: [],
+    },
+    null,
+    [],
+  );
+
+  // const invitation = await client.inviteUser('moderator',)
 };
 
 manageRoom();

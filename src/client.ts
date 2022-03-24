@@ -66,7 +66,7 @@ export class OliverClient {
       zip_code: number;
     } | null = null,
     accessCodes: string[] = [],
-  ): Promise<Result<Room>> => {
+  ): Promise<Room> => {
     const linkCreatePromises = links
       .filter((link) => !!link.url && !!link.type && !!link.name)
       .map((link) => this.link().createLink(link.name, link.url, link.type));
@@ -77,13 +77,11 @@ export class OliverClient {
       if (linkResponse.success) {
         linkIds.push(linkResponse.value.id);
       } else {
-        return failure(
-          OLError.apiDisplayable({
-            type: ErrorType.hard,
-            title: 'Link Creation',
-            message: 'Link creation failed',
-          }),
-        );
+        throw OLError.apiDisplayable({
+          type: ErrorType.hard,
+          title: 'Link Creation',
+          message: 'Link creation failed',
+        });
       }
     }
 
@@ -101,12 +99,8 @@ export class OliverClient {
       access_codes: accessCodes,
     });
 
-    if (response.success) {
-      const { room } = response.value;
-      return success(room);
-    } else {
-      return failure(response.error);
-    }
+    if (response.success) return response.value.room;
+    else throw response.error;
   };
 
   public inviteUser = async (
@@ -117,7 +111,7 @@ export class OliverClient {
     email: string,
     notes?: string,
     roomKey?: KeyPair,
-  ): Promise<Result<Invitation>> => {
+  ): Promise<Invitation> => {
     const response = await this.invitation(roomKey).createInvitation(
       type,
       email,
@@ -126,6 +120,8 @@ export class OliverClient {
       notes ?? '',
       roomId,
     );
-    return response;
+
+    if (response.success) return response.value;
+    else throw response.error;
   };
 }
