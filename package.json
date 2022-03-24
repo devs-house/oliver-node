@@ -30,6 +30,7 @@
   "author": "devs-house",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.26.1",
     "ramda": "^0.28.0"
   },
   "devDependencies": {

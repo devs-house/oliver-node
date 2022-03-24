@@ -1,10 +1,7 @@
 export interface OLErrorProtocol extends Error {
-  title: string;
+  name: string;
   message: string;
   type: ErrorType;
-  displayable: boolean;
-  completion: (success: boolean) => void;
-  actionTitle: string | undefined;
 }
 
 enum ErrorType {
@@ -13,45 +10,23 @@ enum ErrorType {
 }
 
 export const OLError = {
-  someThingWentWrong: (
-    completion?: (success: boolean) => void,
-    actionTitle?: string,
-  ): OLErrorProtocol => ({
-    name: 'Something went wrong',
-    title: 'Oopps!',
+  someThingWentWrong: (): OLErrorProtocol => ({
+    name: 'Oopps!',
     message: 'Something went wrong',
     type: ErrorType.hard,
-    displayable: true,
-    completion: completion ?? ((_) => {}),
-    actionTitle: actionTitle,
   }),
-  apiDisplayable: (
-    apiError: {
-      title: string;
-      message: string;
-      type: ErrorType;
-    },
-    completion?: (success: boolean) => void,
-    actionTitle?: string,
-  ): OLErrorProtocol => ({
-    name: 'Api Displayable',
-    title: apiError.title,
+  apiDisplayable: (apiError: {
+    name: string;
+    message: string;
+    type: ErrorType;
+  }): OLErrorProtocol => ({
+    name: apiError.name,
     message: apiError.message,
     type: apiError.type,
-    displayable: true,
-    completion: completion ?? ((_) => {}),
-    actionTitle: actionTitle,
   }),
-  accessDenied: (
-    completion?: (success: boolean) => void,
-    actionTitle?: string,
-  ): OLErrorProtocol => ({
+  accessDenied: (): OLErrorProtocol => ({
     name: 'Access Denied',
-    title: 'Access Denied',
     message: 'Your authorization expired, please try again',
     type: ErrorType.hard,
-    displayable: true,
-    completion: completion ?? ((_) => {}),
-    actionTitle: actionTitle,
   }),
 };

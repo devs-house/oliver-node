@@ -79,7 +79,7 @@ export class OliverClient {
       } else {
         throw OLError.apiDisplayable({
           type: ErrorType.hard,
-          title: 'Link Creation',
+          name: 'Link Creation',
           message: 'Link creation failed',
         });
       }

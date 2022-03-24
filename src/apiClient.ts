@@ -3,6 +3,9 @@ import { log } from './logger';
 import { OLError } from './entities/Error';
 import { failure, Result, success } from './entities/Result';
 import { KeyPair } from './types';
+import * as axios from 'axios';
+import * as http from 'http';
+import * as https from 'https';
 
 export type ApiTarget = {
   request: ApiRequest;
@@ -41,17 +44,49 @@ export enum ErrorType {
   hard = 1,
 }
 
+type AxiosConfig = {
+  token: string;
+  url: string;
+  axiosOptions?: axios.AxiosRequestConfig;
+  body?: Record<string, any>;
+  headers?: Record<string, string>;
+  qs?: Record<string, string>;
+  serviceName?: string;
+};
+
+export type ClientOptions = {
+  timeout?: number;
+};
+
 export class ApiClient {
   // MARK: - Properties
 
+  readonly options: ClientOptions;
   readonly baseUrl: string;
   readonly userKey: KeyPair;
+  readonly instance: axios.AxiosInstance;
 
   // MARK: - Life Cycle
 
-  constructor(baseUrl: string, userKey: KeyPair) {
+  constructor(
+    baseUrl: string,
+    userKey: KeyPair,
+    options: ClientOptions = { timeout: 10 * 1000 },
+  ) {
+    this.options = options;
     this.baseUrl = baseUrl;
     this.userKey = userKey;
+
+    const nodeOptions = {
+      httpAgent: new http.Agent({ keepAlive: true, keepAliveMsecs: 3000 }),
+      httpsAgent: new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 }),
+    };
+
+    this.instance = axios.default.create({
+      timeout: this.options.timeout, // 10 seconds
+      withCredentials: false, // making sure cookies are not sent
+      ...nodeOptions,
+    });
   }
 
   // MARK: - Request
@@ -65,6 +100,7 @@ export class ApiClient {
     const req = target.request;
     const url = this.baseUrl + req.endPoint;
 
+    console.log(this.instance);
     headers['content-type'] = 'application/json';
     headers['api-key'] = this.userKey.apiKey;
     headers['api-secret'] = this.userKey.apiSecret;
@@ -77,21 +113,21 @@ export class ApiClient {
 
     try {
       const result = await (encoding === ParameterEncoding.query
-        ? fetch(url + '?' + new URLSearchParams(req.parameters), {
-            method: req.method,
+        ? this.instance({
+            url: url,
+            method: target.request.method,
             headers: headers,
+            data: req.parameters,
           })
-        : fetch(url, {
-            method: req.method,
+        : this.instance({
+            url: url,
+            method: target.request.method,
             headers: headers,
-            body: JSON.stringify(req.parameters),
+            data: req.parameters,
           }));
 
-      const statusCode = result.status;
-
-      const data = await result.json();
-      this.logResponse(this.baseUrl, target, data, { statusCode });
-      return this.parse(data);
+      this.logResponse(this.baseUrl, target, result.data, result.status);
+      return this.parse(result.data);
     } catch (error) {
       return failure(OLError.someThingWentWrong());
     }
@@ -111,13 +147,13 @@ export class ApiClient {
   private logResponse = (
     baseUrl: string,
     target: ApiTarget,
-    data?: Record<string, any>,
-    response?: { statusCode: number },
+    data: any,
+    status: number,
   ) => {
     log('Api Response', [
       `URL: ${baseUrl + target.request.endPoint}`,
       `Method: ${target.request.method}`,
-      `Status: ${response?.statusCode ?? 0}`,
+      `Status: ${status}`,
       `Target: ${JSON.stringify(target, null, 2)}`,
       `Parameters: ${JSON.stringify(target.request.parameters, null, 2)}`,
       `Data: ${JSON.stringify(data, null, 2)}`,
