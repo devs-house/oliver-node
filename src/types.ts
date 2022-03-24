@@ -1,3 +1,7 @@
+export type KeyPair = { apiKey: string; apiSecret: string };
+
+export type InvitationType = 'admin' | 'moderator' | 'member';
+
 export type User = {
   id: string;
   firebase_uid: string;
@@ -107,7 +111,7 @@ export type RoomLocation = {
 export type RoomKey = {
   api_key: string;
   api_secret: string;
-  room_id: string | null;
+  room_id: string;
 };
 
 export enum AccessLevel {

@@ -8,6 +8,7 @@
     "dist"
   ],
   "scripts": {
+    "start": "node example/index.ts",
     "test": "jest --config jestconfig.json",
     "build": "rm -rf dist && tsc",
     "format": "prettier --write \"src/**/*.(ts|js|tsx|jsx)\"",

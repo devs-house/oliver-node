@@ -1,8 +1,10 @@
 import { map, propOr } from 'ramda';
 import { ApiClient } from '../apiClient';
 import { Result, success } from '../entities/Result';
+import { roomKeyHeader } from '../roomKeyHeader';
 import { parseRoom, parseRoomKey, parseRoomLink, parseUser } from '../typeMaps';
 import {
+  KeyPair,
   Room,
   RoomConfiguration,
   RoomKey,
@@ -30,7 +32,7 @@ type RoomKeyResponse = Result<{
   key: RoomKey;
 }>;
 
-export const roomRepository = (apiClient: ApiClient) => ({
+export const roomRepository = (apiClient: ApiClient, roomKey?: KeyPair) => ({
   fetchRoom: async (
     roomId: string,
     accessCode?: string,
@@ -112,13 +114,16 @@ export const roomRepository = (apiClient: ApiClient) => ({
   },
 
   updateRoom: async (request: UpdateRoomRequest): Promise<RoomResponse> => {
-    const response = await apiClient.request({
-      request: {
-        method: 'PUT',
-        endPoint: '/room',
-        parameters: { ...request },
+    const response = await apiClient.request(
+      {
+        request: {
+          method: 'PUT',
+          endPoint: '/room',
+          parameters: { ...request },
+        },
       },
-    });
+      roomKeyHeader(roomKey),
+    );
 
     switch (response.type) {
       case 'success':
@@ -134,13 +139,16 @@ export const roomRepository = (apiClient: ApiClient) => ({
   },
 
   deleteRoom: async (roomId: string): Promise<Result<Room>> => {
-    const response = await apiClient.request({
-      request: {
-        method: 'DELETE',
-        endPoint: '/room',
-        parameters: { room_id: roomId },
+    const response = await apiClient.request(
+      {
+        request: {
+          method: 'DELETE',
+          endPoint: '/room',
+          parameters: { room_id: roomId },
+        },
       },
-    });
+      roomKeyHeader(roomKey),
+    );
 
     switch (response.type) {
       case 'success':
@@ -166,8 +174,8 @@ export const roomRepository = (apiClient: ApiClient) => ({
       case 'success':
         const json = response.value;
         const room = parseRoom(json['room']);
-        const roomKey = parseRoomKey(json['key']);
-        return success({ room, key: roomKey });
+        const key = parseRoomKey(json['key']);
+        return success({ room, key });
 
       case 'error':
         return response;
@@ -178,20 +186,23 @@ export const roomRepository = (apiClient: ApiClient) => ({
     apiKey: string,
     roomId: string,
   ): Promise<RoomKeyResponse> => {
-    const response = await apiClient.request({
-      request: {
-        method: 'POST',
-        endPoint: '/room/secret/keys',
-        parameters: { api_key: apiKey, room_id: roomId },
+    const response = await apiClient.request(
+      {
+        request: {
+          method: 'POST',
+          endPoint: '/room/secret/keys',
+          parameters: { api_key: apiKey, room_id: roomId },
+        },
       },
-    });
+      roomKeyHeader(roomKey),
+    );
 
     switch (response.type) {
       case 'success':
         const json = response.value;
         const room = parseRoom(json['room']);
-        const roomKey = parseRoomKey(json['key']);
-        return success({ room, key: roomKey });
+        const key = parseRoomKey(json['key']);
+        return success({ room, key });
 
       case 'error':
         return response;
