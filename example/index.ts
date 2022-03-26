@@ -1,5 +1,4 @@
-// import { createInvitation, createRoom, oliver } from '.';
-// import { RoomLinkType } from './types';
+// import { oliver } from 'oliver-core';
 
 // oliver.configure('development', {
 //   apiKey: '9qJIE436HQC2Awc98lIW',
@@ -11,10 +10,11 @@
 //     title: 'Initial room',
 //     overview: 'Initial room description',
 //     media: {
-//       url: 'https://firebasestorage.googleapis.com/v0/b/oliver-development-585f8.appspot.com/o/room_images%2F68e8e67c-abfc-4466-a3e4-06fa213824c7-1600?alt=media&token=027c25d6-0efd-4c1d-876a-85a8cc7f5eac',
-//       web_banner_url:
+//       square:
+//         'https://firebasestorage.googleapis.com/v0/b/oliver-development-585f8.appspot.com/o/room_images%2F68e8e67c-abfc-4466-a3e4-06fa213824c7-1600?alt=media&token=027c25d6-0efd-4c1d-876a-85a8cc7f5eac',
+//       horizontal:
 //         'https://firebasestorage.googleapis.com/v0/b/oliver-development-585f8.appspot.com/o/room_images%2F7d9efb7b-b1d1-4588-bf68-14edc6969ff7-1200?alt=media&token=04ff1c1a-79cb-49ac-98e0-9b72634528be',
-//       thumbnail_url:
+//       thumbnail:
 //         'https://firebasestorage.googleapis.com/v0/b/oliver-development-585f8.appspot.com/o/room_images%2Fca1ee478-72cb-4af5-ae1f-ee8bcaa1b7eb-600?alt=media&token=abe49659-6bfc-417d-b683-95de4e831f67',
 //     },
 //     date: { start: 1648122421, end: 0 },

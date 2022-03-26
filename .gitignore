@@ -2,3 +2,4 @@
 \node_modules
 \example\node_modules
 src/example.ts
+example/yarn-error.log

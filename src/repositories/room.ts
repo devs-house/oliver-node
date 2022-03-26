@@ -60,7 +60,7 @@ export const createRoom = async (parameters: {
   title: string;
   overview: string;
   date: { start: number; end?: number };
-  media: RoomMedia;
+  media: { square: string; horizontal: string; thumbnail: string };
   links: Pick<RoomLink, 'name' | 'url' | 'type'>[];
   privacy_type: RoomPrivacyType;
   configuration: RoomConfiguration;
@@ -73,7 +73,14 @@ export const createRoom = async (parameters: {
     request: {
       method: 'POST',
       endPoint: '/room',
-      parameters: { ...parameters },
+      parameters: {
+        ...parameters,
+        media: {
+          url: parameters.media.square,
+          thumbnail_url: parameters.media.thumbnail,
+          web_banner_url: parameters.media.horizontal,
+        },
+      },
     },
   });
 
@@ -95,7 +102,7 @@ export const updateRoom = async (parameters: {
   date?: { start: number; end: number };
   privacy_type?: RoomPrivacyType;
   links?: RoomLink[];
-  media?: RoomMedia;
+  media?: { square: string; horizontal: string; thumbnail: string };
   config?: RoomConfiguration;
   location?: RoomLocation | null;
   access_codes?: string[];
@@ -105,7 +112,16 @@ export const updateRoom = async (parameters: {
     request: {
       method: 'PUT',
       endPoint: '/room',
-      parameters: { ...parameters },
+      parameters: {
+        ...parameters,
+        media: parameters.media
+          ? {
+              url: parameters.media.square,
+              thumbnail_url: parameters.media.thumbnail,
+              web_banner_url: parameters.media.horizontal,
+            }
+          : undefined,
+      },
     },
   });
 
