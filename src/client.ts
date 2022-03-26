@@ -7,6 +7,7 @@ class Oliver {
   // MARK: - Properties
 
   private _config: Config;
+  private _userKey: KeyPair;
   private _apiClient: ApiClient;
   private static _instance: Oliver;
 
@@ -14,6 +15,14 @@ class Oliver {
 
   public static get instance() {
     return this._instance || (this._instance = new this());
+  }
+
+  public get config() {
+    return this._config;
+  }
+
+  public get userKey() {
+    return this._userKey;
   }
 
   public get apiClient() {
@@ -31,6 +40,7 @@ class Oliver {
 
   public configure(env: Environment, userKey: KeyPair) {
     this._config = config[env];
+    this._userKey = userKey;
     this._apiClient = new ApiClient(this._config.apiUrl, userKey);
   }
 }
