@@ -1,4 +1,4 @@
-import { prop, propOr } from 'ramda';
+import { map, prop, propOr } from 'ramda';
 import {
   Invitation,
   Room,
@@ -6,7 +6,7 @@ import {
   RoomKey,
   RoomLink,
   RoomLocation,
-  RoomMainMedia,
+  RoomMedia,
   User,
   UserSettings,
 } from './types';
@@ -53,8 +53,8 @@ export const parseRoom = (json: Room): Room => ({
 
   config: parseRoomConfiguration(json.config),
   main_media: parseRoomMainMedia(json.main_media),
-  location: json.location ? parseRoomLocation(json.location) : undefined,
-  link_ids: propOr([], 'link_ids', json),
+  location: json.location ? parseRoomLocation(json.location) : null,
+  links: map(parseRoomLink, propOr([], 'links', json)),
   access_codes: propOr([], 'access_codes', json),
   tags: propOr([], 'tags', json),
 
@@ -81,10 +81,7 @@ export const parseRoomConfiguration = (
   })),
 });
 
-export const parseRoomMainMedia = (json: RoomMainMedia): RoomMainMedia => ({
-  id: prop('id', json),
-  is_active: prop('is_active', json),
-  type: prop('type', json),
+export const parseRoomMainMedia = (json: RoomMedia): RoomMedia => ({
   url: prop('url', json),
   thumbnail_url: prop('thumbnail_url', json),
   web_banner_url: prop('web_banner_url', json),
@@ -95,19 +92,13 @@ export const parseRoomLink = (json: RoomLink): RoomLink => ({
   name: prop('name', json),
   url: prop('url', json),
   type: prop('type', json),
-  owner_id: prop('owner_id', json),
-  is_active: prop('is_active', json),
-  created_at: prop('created_at', json),
-  updated_at: prop('updated_at', json),
 });
 
 export const parseRoomLocation = (json: RoomLocation): RoomLocation => ({
-  id: prop('id', json),
   address: prop('address', json),
   title: prop('title', json),
   latitude: prop('latitude', json),
   longitude: prop('longitude', json),
-  is_active: prop('is_active', json),
   province: propOr(null, 'province', json),
   city: propOr(null, 'city', json),
   country: propOr(null, 'country', json),

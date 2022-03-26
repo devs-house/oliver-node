@@ -16,11 +16,11 @@ export const OLError = {
     type: ErrorType.hard,
   }),
   apiDisplayable: (apiError: {
-    name: string;
+    title: string;
     message: string;
     type: ErrorType;
   }): OLErrorProtocol => ({
-    name: apiError.name,
+    name: apiError.title,
     message: apiError.message,
     type: apiError.type,
   }),

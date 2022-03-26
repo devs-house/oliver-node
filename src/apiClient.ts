@@ -1,11 +1,9 @@
+import * as axios from 'axios';
 import { prop } from 'ramda';
-import { log } from './logger';
 import { OLError } from './entities/Error';
 import { failure, Result, success } from './entities/Result';
+import { log } from './logger';
 import { KeyPair } from './types';
-import * as axios from 'axios';
-import * as http from 'http';
-import * as https from 'https';
 
 export type ApiTarget = {
   request: ApiRequest;
@@ -77,15 +75,9 @@ export class ApiClient {
     this.baseUrl = baseUrl;
     this.userKey = userKey;
 
-    const nodeOptions = {
-      httpAgent: new http.Agent({ keepAlive: true, keepAliveMsecs: 3000 }),
-      httpsAgent: new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 }),
-    };
-
     this.instance = axios.default.create({
       timeout: this.options.timeout, // 10 seconds
       withCredentials: false, // making sure cookies are not sent
-      ...nodeOptions,
     });
   }
 
@@ -100,7 +92,6 @@ export class ApiClient {
     const req = target.request;
     const url = this.baseUrl + req.endPoint;
 
-    console.log(this.instance);
     headers['content-type'] = 'application/json';
     headers['api-key'] = this.userKey.apiKey;
     headers['api-secret'] = this.userKey.apiSecret;
@@ -112,22 +103,28 @@ export class ApiClient {
         : ParameterEncoding.body;
 
     try {
-      const result = await (encoding === ParameterEncoding.query
-        ? this.instance({
-            url: url,
-            method: target.request.method,
-            headers: headers,
-            data: req.parameters,
-          })
-        : this.instance({
-            url: url,
-            method: target.request.method,
-            headers: headers,
-            data: req.parameters,
-          }));
+      try {
+        const result = await (encoding === ParameterEncoding.query
+          ? this.instance({
+              url: url,
+              method: target.request.method,
+              headers: headers,
+              data: req.parameters,
+            })
+          : this.instance({
+              url: url,
+              method: target.request.method,
+              headers: headers,
+              data: req.parameters,
+            }));
 
-      this.logResponse(this.baseUrl, target, result.data, result.status);
-      return this.parse(result.data);
+        this.logResponse(this.baseUrl, target, result.data, result.status);
+        return this.parse(result.data);
+      } catch (error: any) {
+        const result = error.response;
+        this.logResponse(this.baseUrl, target, result.data, result.status);
+        return this.parse(result.data);
+      }
     } catch (error) {
       return failure(OLError.someThingWentWrong());
     }
