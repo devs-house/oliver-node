@@ -6,11 +6,11 @@ import { AccessLevel, Invitation, InvitationType } from '../types';
 
 export const createInvitation = async (parameters: {
   type: InvitationType;
+  room_id: string;
   email: string;
   first_name: string;
   last_name: string;
-  notes: string;
-  room_id: string;
+  notes?: string;
 }): Promise<Result<Invitation>> => {
   const levels: Record<InvitationType, AccessLevel | null> = {
     admin: AccessLevel.admin,
@@ -24,6 +24,7 @@ export const createInvitation = async (parameters: {
       endPoint: '/invitation',
       parameters: {
         ...parameters,
+        notes: parameters.notes ?? '',
         collaborator_access_level: levels[parameters.type],
       },
     },
