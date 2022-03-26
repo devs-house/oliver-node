@@ -1,29 +1,48 @@
-import { ApiClient } from './apiClient';
+import { ApiClient, ErrorType } from './apiClient';
 import { config, Config, Environment } from './config';
-import { invitationRepository } from './repositories/invitationRepository';
-import { roomRepository } from './repositories/roomRepository';
-import { userRepository } from './repositories/userRepository';
+import { OLError } from './entities/Error';
 import { KeyPair } from './types';
 
-export class OliverClient {
+class Oliver {
   // MARK: - Properties
 
-  readonly config: Config;
-  readonly userKey: KeyPair;
-  readonly apiClient: ApiClient;
+  private _config: Config;
+  private _userKey: KeyPair;
+  private _apiClient: ApiClient;
+  private static _instance: Oliver;
+
+  // MARK: - Getters
+
+  public static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
+  public get config() {
+    return this._config;
+  }
+
+  public get userKey() {
+    return this._userKey;
+  }
+
+  public get apiClient() {
+    if (!this._apiClient || !this._config) {
+      throw OLError.apiDisplayable({
+        title: 'Not configured',
+        message: 'Please configure Oliver Client with `configure` method.',
+        type: ErrorType.hard,
+      });
+    }
+    return this._apiClient;
+  }
 
   // MARK: - Life Cycle
 
-  constructor(env: Environment, userKey: KeyPair) {
-    this.config = config[env];
-    this.userKey = userKey;
-    this.apiClient = new ApiClient(this.config.apiUrl, userKey);
+  public configure(env: Environment, userKey: KeyPair) {
+    this._config = config[env];
+    this._userKey = userKey;
+    this._apiClient = new ApiClient(this._config.apiUrl, userKey);
   }
-
-  // MARK: - Entry Points
-
-  public user = () => userRepository(this.apiClient);
-  public room = (roomKey?: KeyPair) => roomRepository(this.apiClient, roomKey);
-  public invitation = (roomKey?: KeyPair) =>
-    invitationRepository(this.apiClient, roomKey);
 }
+
+export const oliver = Oliver.instance;

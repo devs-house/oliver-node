@@ -24,10 +24,6 @@ export type UserSettings = {
   updated_at: number;
 };
 
-export type RoomDateSegment = 'active' | 'past' | 'live';
-export type RoomStatus = 'creating' | 'published';
-export type RoomPrivacyType = 'public' | 'private' | 'managed' | 'invite-only';
-
 export type Room = {
   id: string;
   title: string;
@@ -42,28 +38,17 @@ export type Room = {
   publish_date: number;
   purchase_ids: string[];
 
-  main_media: RoomMainMedia;
-  location?: RoomLocation;
-  config: RoomConfiguration;
+  main_media: RoomMedia;
+  location: RoomLocation | null;
 
-  link_ids: string[];
+  links: RoomLink[];
   access_codes: string[];
   tags: string[];
+  config: RoomConfiguration;
 
   created_at: number;
   updated_at: number;
   is_active: boolean;
-
-  is_demo?: boolean;
-};
-
-export type RoomMainMedia = {
-  id: string;
-  is_active: boolean;
-  type: string;
-  url: string;
-  thumbnail_url: string;
-  web_banner_url: string;
 };
 
 export type RoomConfiguration = {
@@ -76,37 +61,46 @@ export type RoomConfiguration = {
   chat_enabled: boolean;
   share_enabled: boolean;
   see_more_enabled: boolean;
-  banners: RoomBanner[];
+  banners: { link: string; image_url: string }[];
 };
 
-export type RoomBanner = {
-  link: string;
-  image_url: string;
+export type RoomStatus = 'creating' | 'published';
+export type RoomPrivacyType = 'public' | 'private' | 'managed' | 'invite-only';
+
+export type RoomMedia = {
+  url: string;
+  thumbnail_url: string;
+  web_banner_url: string;
 };
 
 export type RoomLink = {
-  id: string;
+  id: string | null;
+  type: RoomLinkType;
   name: string;
   url: string;
-  type: number;
-  owner_id: string;
-  is_active: boolean;
-  created_at: number;
-  updated_at: number;
 };
 
 export type RoomLocation = {
-  id: string;
   address: string;
   title: string;
   latitude: number;
   longitude: number;
-  is_active: boolean;
   province: string;
   city: string;
   country: string;
   zip_code: number;
 };
+
+export enum RoomLinkType {
+  facebook = 0,
+  twitter,
+  instagram,
+  email,
+  linkedIn,
+  website,
+  youtube,
+  zoom,
+}
 
 export type RoomKey = {
   api_key: string;

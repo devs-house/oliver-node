@@ -1,5 +1,4 @@
-import { OliverClient } from '../src/client';
-import * as apiClient from '../src/apiClient';
+import { oliver } from '../src/index';
 import { Environment } from '../src/config';
 import { KeyPair } from '../src/types';
 
@@ -10,7 +9,7 @@ describe('client', () => {
     const keys: KeyPair = { apiKey: 'key', apiSecret: 'secret' };
 
     // When
-    const oliver = new OliverClient(env, keys);
+    oliver.configure(env, keys);
 
     // Then
     expect(oliver.config.environment).toEqual(env);
@@ -24,7 +23,7 @@ describe('client', () => {
     const keys: KeyPair = { apiKey: 'key', apiSecret: 'secret' };
 
     // When
-    const oliver = new OliverClient(env, keys);
+    oliver.configure(env, keys);
 
     // Then
     expect(oliver.config.environment).toEqual(env);
@@ -38,7 +37,7 @@ describe('client', () => {
     const keys: KeyPair = { apiKey: 'key', apiSecret: 'secret' };
 
     // When
-    const oliver = new OliverClient(env, keys);
+    oliver.configure(env, keys);
 
     // Then
     expect(oliver.config.environment).toEqual(env);

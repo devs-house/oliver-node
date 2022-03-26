@@ -1,6 +1,6 @@
 {
   "name": "oliver-core",
-  "version": "1.0.6",
+  "version": "1.1.2",
   "description": "Oliver Core",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "start": "node example/index.ts",
+    "start": "ts-node src/example.ts",
     "test": "jest --config jestconfig.json",
     "build": "rm -rf dist && tsc",
     "format": "prettier --write \"src/**/*.(ts|js|tsx|jsx)\"",
@@ -30,6 +30,7 @@
   "author": "devs-house",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.26.1",
     "ramda": "^0.28.0"
   },
   "devDependencies": {
